@@ -1,0 +1,11 @@
+SourceMap
+=========
+
+.. autoclass:: SourceMap.SourceMap
+
+.. automethod:: SourceMap.SourceMap.store_source
+   
+.. automethod:: SourceMap.SourceMap.return_source_map
+   
+.. automethod:: SourceMap.SourceMap.print_star_coords
+   

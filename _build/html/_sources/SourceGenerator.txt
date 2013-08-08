@@ -1,0 +1,18 @@
+SourceGenerator
+===============
+
+
+.. autoclass:: SourceGenerator.SourceGenerator
+
+.. automethod:: SourceGenerator.SourceGenerator.generate_sources
+
+.. automethod:: SourceGenerator.SourceGenerator.one_source
+
+.. automethod:: SourceGenerator.SourceGenerator.find_emission_start
+
+.. automethod:: SourceGenerator.SourceGenerator.find_galactic_longitude
+
+.. automethod:: SourceGenerator.SourceGenerator.find_galactic_lattitude
+
+.. automethod:: SourceGenerator.SourceGenerator.print_locations
+
