@@ -108,7 +108,19 @@ useFile='no', skipPrompts = 'no'):</pre>
 </ol>
 <p>5) Override relevant methods, by simply rewriting the standard version of a method
 you want to change. It&#8217;s also considered good form to include a documentation string
-for any new methods.</p>
+for any new methods:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">generate_flux_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+ <span class="c"># Generate flux values for specified time steps</span>
+ <span class="bp">self</span><span class="o">.</span><span class="n">flux_list</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">ntstep</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+ <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+ <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tstart</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">tstop</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">timeRes</span><span class="p">):</span>
+     <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">emissionStart</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">emissionEnd</span><span class="p">):</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">flux_list</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">f_time</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">time_pars</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">timeRes</span>
+     <span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
 <p>That&#8217;s it! Any methods you choose not to override will work exactly the same as they did in
 the standard Source class.</p>
 </div>
