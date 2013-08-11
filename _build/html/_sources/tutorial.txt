@@ -1,4 +1,0 @@
-Another exampele
-============================
-
-This is the example created.

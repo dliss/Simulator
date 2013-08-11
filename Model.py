@@ -224,8 +224,8 @@ class Transient(Standard):
             
 class VaryingSpectrum(Standard):
     """contains the specific methods for generating the light curve
-    of a source with varying spectral shape. -- NOTE, user must edit the file names and time intervals 
-    in the spectral_shape_from_file(self, i) method to match those they want to define the source's spectral shape over time"""      
+    of a source with varying spectral shape. -- NOTE: user must edit the file names and time intervals 
+    in the method called spectral_shape_from_file to control the time-dependent spectral shape of a source's light curve"""      
     def __init__(self, source):
         
     #instantiate the parent class
@@ -242,8 +242,8 @@ class VaryingSpectrum(Standard):
         return None
     
     def spectral_shape_from_file(self, i):
-        '''support function for generate_light_curve_from_flux_and_spectrum, which takes reads files for
-        spectrum at user-specified time intervals'''
+        '''support function for generate_light_curve_from_flux_and_spectrum, which takes files at user-specified 
+        time intervals to define a source's spectrum '''
         
         self.time = self.tstart + i*(self.source.timeRes)
         self.spec=np.zeros([self.nestep,1])

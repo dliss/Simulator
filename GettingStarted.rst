@@ -26,6 +26,8 @@ The Simulator software comes with the following Source classes:
 
     .. autoclass:: Source.Transient
     
+    .. autoclass:: Source.VaryingSpectrum
+    
 Source.Standard represents a generic Source object, while all other Source 
 classes inherit from the standard Source object to define more specific kinds of
 sources.
@@ -69,7 +71,11 @@ novae.
    
     .. automethod:: Source.Transient.prompt_for_expressions
 
+Source.VaryingSpectrum needs no new parameters but overrides the prompt_for_expressions 
+method so that the user will not be prompted for spectrum parameters. (For this subclass,
+Model.VaryingSpectrum is responsible for defining the spectrum.)
 
+    .. automethod:: Source.VaryingSpectrum.prompt_for_expressions
 
 Model
 ----------------------
@@ -79,6 +85,8 @@ The Simulator software comes with the following Model classes:
     .. autoclass:: Model.Standard
 
     .. autoclass:: Model.Transient
+    
+    .. autoclass:: Model.VaryingSpectrum
     
 Model.Standard represents a generic Model that can generate the light curve of a 
 standard Source, while all other Model classes inherit from the standard Model to 
@@ -113,6 +121,20 @@ To achieve this effect, Model.Transient overrides the generate_flux_values metho
 the standard Model.
 
     .. automethod:: Model.Transient.generate_flux_values
+    
+Model.Transient differs from the standard Model because it generates the spectrum of
+a source using time intervals and txt files specified in the spectral_shape_from_file method.
+It also overrides several other methods that are used in Model.Standard to generate constant
+spectral shape. (NOTE: User must edit the subclass's spectral_shape_from_file method if 
+they would like to control the time intervals and txt files used in the simulations).
+    
+    .. automethod:: Model.VaryingSpectrum.generate_spectral_shape
+    
+    .. automethod:: Model.VaryingSpectrum.make_spec
+    
+    .. automethod:: Model.VaryingSpectrum.spectral_shape_from_file
+    
+    .. automethod:: Model.VaryingSpectrum.generate_light_curve_from_flux_and_spectrum
 
 SourceMap
 ----------------------

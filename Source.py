@@ -220,7 +220,7 @@ class VaryingSpectrum(Standard):
     
     def prompt_for_expressions(self):
         '''overrides the Standard method to suggest general expressions that
-        may be convenient in VaryingSpectrum simulations'''
+        may be convenient in VaryingSpectrum simulations and to override the prompts for spectral parameters'''
         
         from ast import literal_eval
         if self.skipPrompts == 'no':

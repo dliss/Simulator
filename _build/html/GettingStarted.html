@@ -83,6 +83,12 @@ the other modules.</p>
 emissionStart and lasting for emissionLength.</p>
 </dd></dl>
 
+<dl class="class">
+<dt id="Source.VaryingSpectrum">
+<em class="property">class </em><tt class="descclassname">Source.</tt><tt class="descname">VaryingSpectrum</tt><big>(</big><em>startTime=1000</em>, <em>endTime=1296600</em>, <em>timeRes=10000</em>, <em>upperE=10000.0</em>, <em>lowerE=100.0</em>, <em>energyRes=100</em>, <em>gaLong=0.0</em>, <em>gaLat=0.0</em>, <em>link='modelParameters.txt'</em>, <em>useFile='no'</em>, <em>skipPrompts='no'</em><big>)</big><a class="headerlink" href="#Source.VaryingSpectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Source.VaryingSpectrum represents a Source object with varying spectrum.</p>
+</dd></dl>
+
 </div></blockquote>
 <p>Source.Standard represents a generic Source object, while all other Source
 classes inherit from the standard Source object to define more specific kinds of
@@ -149,6 +155,18 @@ may be convenient in Transient simulations</p>
 </dd></dl>
 
 </div></blockquote>
+<p>Source.VaryingSpectrum needs no new parameters but overrides the prompt_for_expressions
+method so that the user will not be prompted for spectrum parameters. (For this subclass,
+Model.VaryingSpectrum is responsible for defining the spectrum.)</p>
+<blockquote>
+<div><dl class="method">
+<dt id="Source.VaryingSpectrum.prompt_for_expressions">
+<tt class="descclassname">VaryingSpectrum.</tt><tt class="descname">prompt_for_expressions</tt><big>(</big><big>)</big><a class="headerlink" href="#Source.VaryingSpectrum.prompt_for_expressions" title="Permalink to this definition">¶</a></dt>
+<dd><p>overrides the Standard method to suggest general expressions that
+may be convenient in VaryingSpectrum simulations and to override the prompts for spectral parameters</p>
+</dd></dl>
+
+</div></blockquote>
 </div>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
@@ -166,6 +184,14 @@ of a Standard source object.</p>
 <em class="property">class </em><tt class="descclassname">Model.</tt><tt class="descname">Transient</tt><big>(</big><em>source</em><big>)</big><a class="headerlink" href="#Model.Transient" title="Permalink to this definition">¶</a></dt>
 <dd><p>contains the specific methods for generating the light curve
 of a Transient source object.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="Model.VaryingSpectrum">
+<em class="property">class </em><tt class="descclassname">Model.</tt><tt class="descname">VaryingSpectrum</tt><big>(</big><em>source</em><big>)</big><a class="headerlink" href="#Model.VaryingSpectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>contains the specific methods for generating the light curve
+of a source with varying spectral shape. &#8211; NOTE: user must edit the file names and time intervals 
+in the method called spectral_shape_from_file to control the time-dependent spectral shape of a source&#8217;s light curve</p>
 </dd></dl>
 
 </div></blockquote>
@@ -247,6 +273,38 @@ the standard Model.</p>
 <dt id="Model.Transient.generate_flux_values">
 <tt class="descclassname">Transient.</tt><tt class="descname">generate_flux_values</tt><big>(</big><big>)</big><a class="headerlink" href="#Model.Transient.generate_flux_values" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</div></blockquote>
+<p>Model.Transient differs from the standard Model because it generates the spectrum of
+a source using time intervals and txt files specified in the spectral_shape_from_file method.
+It also overrides several other methods that are used in Model.Standard to generate constant
+spectral shape. (NOTE: User must edit the subclass&#8217;s spectral_shape_from_file method if
+they would like to control the time intervals and txt files used in the simulations).</p>
+<blockquote>
+<div><dl class="method">
+<dt id="Model.VaryingSpectrum.generate_spectral_shape">
+<tt class="descclassname">VaryingSpectrum.</tt><tt class="descname">generate_spectral_shape</tt><big>(</big><big>)</big><a class="headerlink" href="#Model.VaryingSpectrum.generate_spectral_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>overrides generate_spectral_shape because this method is not used in the VaryingSpectrum version of Model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Model.VaryingSpectrum.make_spec">
+<tt class="descclassname">VaryingSpectrum.</tt><tt class="descname">make_spec</tt><big>(</big><em>expr</em><big>)</big><a class="headerlink" href="#Model.VaryingSpectrum.make_spec" title="Permalink to this definition">¶</a></dt>
+<dd><p>overrides make_spec because this method is not used in the VaryingSpectrum version of Model</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Model.VaryingSpectrum.spectral_shape_from_file">
+<tt class="descclassname">VaryingSpectrum.</tt><tt class="descname">spectral_shape_from_file</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#Model.VaryingSpectrum.spectral_shape_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>support function for generate_light_curve_from_flux_and_spectrum, which takes files at user-specified 
+time intervals to define a source&#8217;s spectrum</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Model.VaryingSpectrum.generate_light_curve_from_flux_and_spectrum">
+<tt class="descclassname">VaryingSpectrum.</tt><tt class="descname">generate_light_curve_from_flux_and_spectrum</tt><big>(</big><big>)</big><a class="headerlink" href="#Model.VaryingSpectrum.generate_light_curve_from_flux_and_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>calls spectral_shape_from_file(self,i) for spectral shape and generates the final light curve</p>
+</dd></dl>
 
 </div></blockquote>
 </div>

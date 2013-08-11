@@ -1,4 +1,0 @@
-Controller
-==========
-
-The controller class lets users run the software.
