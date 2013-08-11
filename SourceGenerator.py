@@ -1,6 +1,6 @@
 import SourceMap
-from Source import Transient as SOURCE_USED
-from Model import Transient as MODEL_USED
+from Source import VaryingSpectrum as SOURCE_USED
+from Model import VaryingSpectrum as MODEL_USED
 
 #import multiprocessing
 #from multiprocessing import Lock
@@ -47,7 +47,7 @@ class SourceGenerator:
             galactic_lattitude = self.find_galactic_lattitude()              
         
         source = SOURCE_USED(startTime = self.start, endTime = self.end, 
-                                                          emissionStart = emission_start, skipPrompts = 'no',
+                                                          skipPrompts = 'no',
                                                           gaLong=galactic_longitude, gaLat=galactic_lattitude)
 
         #insert source into a model

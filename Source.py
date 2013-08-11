@@ -31,7 +31,7 @@ class Standard(object):
         
         #these are just used when prompt_for_expression is run, 
         #to suggest some values to the user
-        self.timeHalf = (self.endTime-self.startTime)/2 + self.startTime
+        self.halfTime = (self.endTime-self.startTime)/2 + self.startTime
         self.normalization = 10**-10 
 
         #if self.useFile != 'no' : useFile()
@@ -195,9 +195,59 @@ class Transient(Standard):
             self.time_expr= 'p[0]*(t-p[1])**2+p[2]' #porabola
             self.time_pars = [(-3.0/(4*(self.emissionStart-self.emissionHalf)**2))*self.normalization,self.emissionHalf,self.normalization]
             self.spec_expr = 'p[0]/pow(x/p[1],p[2])'
-            #note that I do not have a simple way to auto use a file
             self.spec_pars = [10.**(-10),1000.,2.4]
+            
+class VaryingSpectrum(Standard):
+    """Source.VaryingSpectrum represents a Source object with varying spectrum."""
+    
+
+    def __init__(self,  
+             
+    #standard variables 
+    startTime = 1000, endTime = 1296600, timeRes = 10000, 
+    upperE=10000., lowerE=100., energyRes = 100,
+    gaLong=0.0, gaLat=0.0,
+    link='modelParameters.txt', 
+    useFile='no', skipPrompts = 'no'):
+    
+    #instantiate the parent class
+        super(VaryingSpectrum, self).__init__( 
+        startTime = startTime, endTime = endTime, timeRes = timeRes, 
+        upperE=upperE, lowerE=lowerE, energyRes = energyRes, 
+        gaLong=gaLong, gaLat=gaLat,
+        link=link, 
+        useFile=useFile, skipPrompts = skipPrompts)
+    
+    def prompt_for_expressions(self):
+        '''overrides the Standard method to suggest general expressions that
+        may be convenient in VaryingSpectrum simulations'''
         
+        from ast import literal_eval
+        if self.skipPrompts == 'no':
+        
+            default = 'p[0]*(t-p[1])**2+p[2]' #porabola
+            self.time_expr = raw_input("Please time_expr: %s"%default + chr(8)*4)
+            if not self.time_expr:
+                self.time_expr = default
+                
+            default = [(-3.1/(4*(self.startTime-self.halfTime)**2))*self.normalization,self.halfTime,self.normalization]
+            default = str(default)
+            self.time_pars = raw_input("Please time_pars: %s"%default + chr(8)*4)
+            if not self.time_pars:
+                self.time_pars = default
+            self.time_pars = literal_eval(self.time_pars)
+                
+        #do not prompt for spectral shape parameters, because none are needed in this subclass
+            self.spec_expr = '0'
+            self.spec_pars = [0]
+                
+        else:
+            self.time_expr= 'p[0]*(t-p[1])**2+p[2]' #porabola
+            self.time_pars = [(-3.0/(4*(self.emissionStart-self.emissionHalf)**2))*self.normalization,self.emissionHalf,self.normalization]
+            self.spec_expr = '0'
+            self.spec_pars = [0]
+        
+
         
         
     

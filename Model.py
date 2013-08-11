@@ -83,11 +83,13 @@ class Standard(object):
     def generate_spectral_shape(self):
         '''generates constant spectral shape for a light curve, using the f_spec function.'''
         
-        self.spec=np.zeros([self.nestep,1])
-        self.ebin=np.logspace(m.log10(self.estart),m.log10(self.estop),num=self.nestep,endpoint=False, base=10)
-        for i in xrange(self.nestep):
-            self.spec[i]=self.f_spec(self.ebin[i],self.source.spec_pars)
-            
+        if self.source.useFile != 'yes':
+        
+            self.spec=np.zeros([self.nestep,1])
+            self.ebin=np.logspace(m.log10(self.estart),m.log10(self.estop),num=self.nestep,endpoint=False, base=10)
+            for i in xrange(self.nestep):
+                self.spec[i]=self.f_spec(self.ebin[i],self.source.spec_pars)
+                
         # If spectral shape is given via file, use those values
         if self.source.useFile == 'yes':  
             self.spectral_shape_from_file()
@@ -102,8 +104,13 @@ class Standard(object):
     
     def spectral_shape_from_file(self):
         'support function for generate_spectral_shape, which takes input from a file'
-        self.new_data = np.loadtxt('textArray.txt') 
-        for i in xrange(0,self.nestep):
+        file ='textArray.txt'
+        try:
+            self.new_data = np.loadtxt(file) 
+        except:
+             print "Oops!  That was not a valid file you used for the spectrum", file
+             logger.error('Oops!  That was not a valid file you used for the spectrum ' + file)
+        for i in xrange(0,len(self.new_data)):
             self.ebin[i] = self.new_data[i][0]
             self.spec[i] = self.new_data[i][1]
         
@@ -214,3 +221,63 @@ class Transient(Standard):
                 self.flux_list[x]=self.f_time(i,self.source.time_pars)
             self.time += self.source.timeRes
             x += 1
+            
+class VaryingSpectrum(Standard):
+    """contains the specific methods for generating the light curve
+    of a source with varying spectral shape. -- NOTE, user must edit the file names and time intervals 
+    in the spectral_shape_from_file(self, i) method to match those they want to define the source's spectral shape over time"""      
+    def __init__(self, source):
+        
+    #instantiate the parent class
+        super(VaryingSpectrum, self).__init__(source)
+        
+    # We override so spectral shape changes at specified intervals
+    
+    def generate_spectral_shape(self):
+        '''overrides generate_spectral_shape because this method is not used in the VaryingSpectrum version of Model'''
+        return None 
+    
+    def make_spec(self, expr):
+        "overrides make_spec because this method is not used in the VaryingSpectrum version of Model"
+        return None
+    
+    def spectral_shape_from_file(self, i):
+        '''support function for generate_light_curve_from_flux_and_spectrum, which takes reads files for
+        spectrum at user-specified time intervals'''
+        
+        self.time = self.tstart + i*(self.source.timeRes)
+        self.spec=np.zeros([self.nestep,1])
+        self.ebin=np.zeros([self.nestep,1])
+        
+        #sets up your time intervals:
+        TIME1 = self.tstart + 40*(self.source.timeRes)
+        TIME2 = self.tstart + 90*(self.source.timeRes)
+        TIME3 = self.tstop
+        
+        #specifies file for your spectrum at specific time intervals
+        if (self.time >= self.tstart) and (self.time <= TIME1):
+            file = 'textArray.txt' 
+        elif (self.time > TIME1) and (self.time <= TIME2):
+            file = 'textArray.txt'
+        elif (self.time > TIME2) and (self.time <= TIME3):
+            file = 'textArray.txt'  
+            
+        #sets up a default spectrum file, for time intervals that are not covered in the if-else block above    
+        else:
+            file = 'textArray.txt'        
+        try:
+            self.new_data = np.loadtxt(file) 
+        except:
+             print "Oops!  That was not a valid file you used for the spectrum", file
+             logger.error('Oops!  That was not a valid file you used for the spectrum ' + file)
+        
+        for z in xrange(0,len(self.new_data)):
+            self.ebin[z] = self.new_data[z][0]
+            self.spec[z] = self.new_data[z][1]
+        return self.spec.T
+            
+    def generate_light_curve_from_flux_and_spectrum(self):
+        '''calls spectral_shape_from_file(self,i) for spectral shape and generates the final light curve'''
+        self.flux_energy_list=np.zeros([self.ntstep,self.nestep])
+        for i in xrange(0,self.ntstep):
+            self.flux_energy_list[i]=self.flux_list[i]*self.spectral_shape_from_file(i)
